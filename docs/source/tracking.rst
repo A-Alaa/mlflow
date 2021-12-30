@@ -922,6 +922,8 @@ You can inject some `SQLAlchemy connection pooling options <https://docs.sqlalch
 +-----------------------------------------+-----------------------------+
 | ``MLFLOW_SQLALCHEMYSTORE_MAX_OVERFLOW`` | ``max_overflow``            |
 +-----------------------------------------+-----------------------------+
+| ``MLFLOW_SQLALCHEMYSTORE_NULL_POOL``    | ``poolclass=pool.NullPool`` |
++-----------------------------------------+-----------------------------+
 
 Networking
 ----------

@@ -17,6 +17,7 @@ _logger = logging.getLogger(__name__)
 
 MLFLOW_SQLALCHEMYSTORE_POOL_SIZE = "MLFLOW_SQLALCHEMYSTORE_POOL_SIZE"
 MLFLOW_SQLALCHEMYSTORE_MAX_OVERFLOW = "MLFLOW_SQLALCHEMYSTORE_MAX_OVERFLOW"
+MLFLOW_SQLALCHEMYSTORE_NULL_POOL = "MLFLOW_SQLALCHEMYSTORE_NULL_POOL"
 MAX_RETRY_COUNT = 15
 
 
@@ -176,6 +177,7 @@ def create_sqlalchemy_engine_with_retry(db_uri):
 def create_sqlalchemy_engine(db_uri):
     pool_size = os.environ.get(MLFLOW_SQLALCHEMYSTORE_POOL_SIZE)
     pool_max_overflow = os.environ.get(MLFLOW_SQLALCHEMYSTORE_MAX_OVERFLOW)
+    pool_null = os.environ.get(MLFLOW_SQLALCHEMYSTORE_NULL_POOL)
     pool_kwargs = {}
     # Send argument only if they have been injected.
     # Some engine does not support them (for example sqllite)
@@ -183,6 +185,8 @@ def create_sqlalchemy_engine(db_uri):
         pool_kwargs["pool_size"] = int(pool_size)
     if pool_max_overflow:
         pool_kwargs["max_overflow"] = int(pool_max_overflow)
+    if pool_null:
+        pool_kwargs["poolclass"] = sqlalchemy.pool.NullPool
     if pool_kwargs:
         _logger.info("Create SQLAlchemy engine with pool options %s", pool_kwargs)
     return sqlalchemy.create_engine(db_uri, pool_pre_ping=True, **pool_kwargs)
